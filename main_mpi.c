@@ -211,10 +211,10 @@ int main(int argc, char *argv[])
         mzerar(mmult_MATRIZ_MPIC);
     }
 
-    printf("\rMultiplicação MPI...             ");
+    printf("\rMultiplicação MPI, rank: %d...             ", MPI_rank);
     fflush(stdout);
 
-    mzerar(mmult_MATRIZ_MPIC);
+    //mzerar(mmult_MATRIZ_MPIC);
     start_time = wtime();
     multiplicarMPI (A, B, C, MPI_size, MPI_rank, chunk_lines_A, size);	
     end_time = wtime();
@@ -256,15 +256,27 @@ int main(int argc, char *argv[])
 	}
 
     mmult_MATRIZ_MPIBlC = (mymatriz *)malloc(sizeof(mymatriz));
-    printf("\rMultiplicação multithread em bloco...             ");
+    mmult_MATRIZ_MPIBlC = malloc(sizeof(mymatriz));
+    mmult_MATRIZ_MPIBlC->matriz = NULL;
+    mmult_MATRIZ_MPIBlC->lin = mat_a.lin;
+    mmult_MATRIZ_MPIBlC->col = mat_b.col;
+
+    //realiza a alocação de memória para matriz resultado
+    if (malocar(mmult_MATRIZ_MPIBlC)) {
+        printf("ERROR: Out of memory\n");
+        exit(1);
+    }else{
+        mzerar(mmult_MATRIZ_MPIBlC);
+    }
+    printf("\rMultiplicação MPI em bloco, rank: %d...             ",MPI_rank);
     fflush(stdout);
 
-    Vsubmat_a = particionar_matriz(mat_a.matriz, N, La, 1, nro_submatrizes);
-    Vsubmat_b = particionar_matriz(mat_b.matriz, Lb, M, 0, nro_submatrizes);
-    Vsubmat_c = csubmatrizv2(N, M, nro_submatrizes);
+    //Vsubmat_a = particionar_matriz(mat_a.matriz, N, La, 1, nro_submatrizes);
+    //Vsubmat_b = particionar_matriz(mat_b.matriz, Lb, M, 0, nro_submatrizes);
+    //Vsubmat_c = csubmatrizv2(N, M, nro_submatrizes);
 
     start_time = wtime();
-    multiplicaBlocoMPI (A1,B1,C1, MPI_size, MPI_rank, chunk_lines_A, size, N);
+    multiplicaBlocoMPI (A1,B1,C1, MPI_size, 2, MPI_rank, chunk_lines_A, size, N);
     end_time = wtime();
     // mmult_MATRIZ_MPIBlC = msomar(Vsubmat_c[0]->matriz,Vsubmat_c[1]->matriz, 1);
     // for (int i = 2; i < n_threads; i++){
@@ -277,6 +289,7 @@ int main(int argc, char *argv[])
 		for(int i = 0; i < size; i++){
 			for(int j = 0; j < size; j++){
 				mmult_MATRIZ_MPIBlC->matriz[i][j] = C1[i * size + j];
+                //printf("\nvalor: %d", C1[i * size + j]);
 			}
 		}		
         sprintf(filename, "MATRIZ_MPIBlC.result");
