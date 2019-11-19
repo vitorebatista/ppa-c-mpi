@@ -177,7 +177,6 @@ int main(int argc, char *argv[])
 
 	int chunk_lines_A = (int) (size / MPI_size);
 
-
 	if(MPI_rank == MASTER){
 		A = calloc(size * size, sizeof(int));
 		B = calloc(size * size, sizeof(int));
@@ -190,6 +189,7 @@ int main(int argc, char *argv[])
 				
 			}
 		}
+        start_time = wtime();
 	}else{
 		A = malloc(chunk_lines_A * size * sizeof(int));
 		B = malloc(size * size * sizeof(int));
@@ -215,10 +215,9 @@ int main(int argc, char *argv[])
     fflush(stdout);
 
     //mzerar(mmult_MATRIZ_MPIC);
-    start_time = wtime();
+    
     multiplicarMPI (A, B, C, MPI_size, MPI_rank, chunk_lines_A, size);	
-    end_time = wtime();
-    tempo_MATRIZ_MPIC += end_time - start_time;
+    
         
 
     if(MPI_rank == MASTER){
@@ -227,6 +226,8 @@ int main(int argc, char *argv[])
 				mmult_MATRIZ_MPIC->matriz[i][j] = C[i * size + j];
 			}
 		}
+        end_time = wtime();
+        tempo_MATRIZ_MPIC += end_time - start_time;
         sprintf(filename, "MATRIZ_MPIC.result");
         fmat = fopen(filename, "w");
         fileout_matriz(mmult_MATRIZ_MPIC, fmat);
@@ -249,6 +250,7 @@ int main(int argc, char *argv[])
 				
 			}
 		}
+        start_time = wtime();
 	}else{
 		A1 = malloc(chunk_lines_A * size * sizeof(int));
 		B1 = malloc(size * size * sizeof(int));
@@ -275,15 +277,9 @@ int main(int argc, char *argv[])
     //Vsubmat_b = particionar_matriz(mat_b.matriz, Lb, M, 0, nro_submatrizes);
     //Vsubmat_c = csubmatrizv2(N, M, nro_submatrizes);
 
-    start_time = wtime();
-    multiplicaBlocoMPI (A1,B1,C1, MPI_size, 2, MPI_rank, chunk_lines_A, size, N);
-    end_time = wtime();
-    // mmult_MATRIZ_MPIBlC = msomar(Vsubmat_c[0]->matriz,Vsubmat_c[1]->matriz, 1);
-    // for (int i = 2; i < n_threads; i++){
-    //     mmult_MATRIZ_MPIBlC = msomar(mmult_MATRIZ_MPIBlC,Vsubmat_c[i]->matriz, 1);	
-    // }
     
-    tempo_MATRIZ_MPIBlC += end_time - start_time;
+    multiplicaBlocoMPI (A1,B1,C1, MPI_size, 2, MPI_rank, chunk_lines_A, size, N);
+    
 
     if(MPI_rank == MASTER){
 		for(int i = 0; i < size; i++){
@@ -292,13 +288,16 @@ int main(int argc, char *argv[])
                 //printf("\nvalor: %d", C1[i * size + j]);
 			}
 		}		
+        end_time = wtime();
+    
+        tempo_MATRIZ_MPIBlC += end_time - start_time;
         sprintf(filename, "MATRIZ_MPIBlC.result");
         fmat = fopen(filename, "w");
         fileout_matriz(mmult_MATRIZ_MPIBlC, fmat);
         fclose(fmat);
-    }
+    
     // %%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%
-    if(MPI_rank == MASTER){
+    
         // %%%%%%%%%%%%%%%%%%%%%%%% BEGIN %%%%%%%%%%%%%%%%%%%%%%%%
         // Impressao dos resultados de tempo
         printf("\n\n\tCOMPARAR MATRIZ_SeqC c/ MATRIZ_SeqBlC\n\t");
