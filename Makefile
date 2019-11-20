@@ -25,9 +25,8 @@ help:
 	@echo
 	@echo
 	@echo "####### Exemplo de Execução #######"
-	@echo "./gmat 10 5"
-	@echo "./gmat 5 10"
-	@echo "./main_omp 10x5-mat.map 5x10-mat.map"
+	@echo "./gmat 1000 1000"
+	@echo "mpirun -np 2 main_mpi 1000x1000-mat.map 1000x1000-mat.map"
 
 clean:
 	rm -f *.o *~ $(TARGET) *.map *.result
