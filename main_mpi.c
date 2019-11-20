@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
                 B[i * size + j] = mat_b.matriz[i][j];
             }
         }
-        start_time = wtime();
+        
     }
     else
     {
@@ -221,13 +221,12 @@ int main(int argc, char *argv[])
 
     printf("\rMultiplicação MPI, rank: %d...             ", MPI_rank);
     fflush(stdout);
-
-    //mzerar(mmult_MATRIZ_MPIC);
-
+    start_time = wtime();
     multiplicarMPI(A, B, C, MPI_size, MPI_rank, chunk_lines_A, size);
 
     if (MPI_rank == MASTER)
     {
+        end_time = wtime();
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -235,7 +234,7 @@ int main(int argc, char *argv[])
                 mmult_MATRIZ_MPIC->matriz[i][j] = C[i * size + j];
             }
         }
-        end_time = wtime();
+        
         tempo_MATRIZ_MPIC += end_time - start_time;
         sprintf(filename, "MATRIZ_MPIC.result");
         fmat = fopen(filename, "w");
@@ -261,7 +260,6 @@ int main(int argc, char *argv[])
                 B1[i * size + j] = mat_b.matriz[i][j];
             }
         }
-        start_time = wtime();
     }
     else
     {
@@ -289,11 +287,9 @@ int main(int argc, char *argv[])
     printf("\rMultiplicação MPI em bloco, rank: %d...             ", MPI_rank);
     fflush(stdout);
 
-    //Vsubmat_a = particionar_matriz(mat_a.matriz, N, La, 1, nro_submatrizes);
-    //Vsubmat_b = particionar_matriz(mat_b.matriz, Lb, M, 0, nro_submatrizes);
-    //Vsubmat_c = csubmatrizv2(N, M, nro_submatrizes);
-
-    multiplicaBlocoMPI(A1, B1, C1, MPI_size, 2, MPI_rank, chunk_lines_A, size, N);
+    start_time = wtime();
+    multiplicaBlocoMPI(A1, B1, C1, MPI_size, MPI_rank, chunk_lines_A, size);
+    end_time = wtime();
 
     if (MPI_rank == MASTER)
     {
@@ -305,7 +301,6 @@ int main(int argc, char *argv[])
                 //printf("\nvalor: %d", C1[i * size + j]);
             }
         }
-        end_time = wtime();
 
         tempo_MATRIZ_MPIBlC += end_time - start_time;
         sprintf(filename, "MATRIZ_MPIBlC.result");
@@ -329,10 +324,10 @@ int main(int argc, char *argv[])
         printf("\n\tTempo Médio MATRIZ_SeqC:\t%.6f sec \n", tempo_MATRIZ_SeqC / count_for);
         printf("\tTempo Médio MATRIZ_SeqBlC:\t%.6f sec\n", tempo_MATRIZ_SeqBlC / count_for);
         printf("\tTempo Médio MATRIZ_MPIC:\t%.6f sec \n", tempo_MATRIZ_MPIC / count_for);
-        printf("\tTempo Médio MATRIZ_MPIBlC:\t%.6f sec \n", tempo_MATRIZ_MPIBlC / count_for);
+        printf("\tTempo Médio MATRIZ_MPIBlC:\t%.6f sec \n", tempo_MATRIZ_MPIBlC);
 
-        speedup_seqC = (tempo_MATRIZ_SeqC / count_for) / (tempo_MATRIZ_MPIC / count_for);
-        speedup_BlC = (tempo_MATRIZ_SeqBlC / count_for) / (tempo_MATRIZ_MPIBlC / count_for);
+        speedup_seqC = (tempo_MATRIZ_SeqC / count_for) / tempo_MATRIZ_MPIC;
+        speedup_BlC = (tempo_MATRIZ_SeqBlC / count_for) / tempo_MATRIZ_MPIBlC;
         printf("\n\tSPEEDUP (MATRIZ_C): \t%.3f (%.2f %c)", speedup_seqC, speedup_seqC * 100, 37);
         printf("\n\tSPEEDUP (MATRIZ_BLC): \t%.3f (%.2f %c)\n\n", speedup_BlC, speedup_BlC * 100, 37);
 

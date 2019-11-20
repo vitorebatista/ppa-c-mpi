@@ -3,4 +3,4 @@
 #include "matriz-operacoesv3.h"
 
 void multiplicarMPI(int *A, int *B, int *C, int MPI_size, int MPI_rank, int chunk_lines_A, int size);
-void multiplicaBlocoMPI(int *A, int *B, int *C, int TILE,int MPI_size, int MPI_rank, int chunk_lines_A, int size, int N);
+void multiplicaBlocoMPI(int *A, int *B, int *C, int MPI_size, int MPI_rank, int chunk_lines_A, int size);
