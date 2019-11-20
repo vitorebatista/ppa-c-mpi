@@ -25,6 +25,7 @@ Em seguida chamar o programa principal que realizará os devidos testes e aprese
 Será apresentado no terminal um retorno semelhante a este:
 
 ```
+
         COMPARAR MATRIZ_SeqC c/ MATRIZ_SeqBlC
         Matrizes são idênticas!! :) 
 
@@ -34,12 +35,12 @@ Será apresentado no terminal um retorno semelhante a este:
         COMPARAR MATRIZ_SeqC c/ MATRIZ_MPIBlC
         Matrizes são idênticas!! :) 
 
-        Tempo Médio MATRIZ_SeqC:        0.517273 sec 
-        Tempo Médio MATRIZ_SeqBlC:      3.139238 sec
-        Tempo Médio MATRIZ_MPIC:        0.473493 sec 
-        Tempo Médio MATRIZ_MPIBlC:      0.220083 sec 
+        Tempo Médio MATRIZ_SeqC:        0.569333 sec 
+        Tempo Médio MATRIZ_SeqBlC:      3.339507 sec
+        Tempo Médio MATRIZ_MPIC:        2.420058 sec 
+        Tempo Médio MATRIZ_MPIBlC:      1.956970 sec 
 
-        SPEEDUP (MATRIZ_C):     1.092 (109.25 %)
-        SPEEDUP (MATRIZ_BLC):   14.264 (1426.39 %)
+        SPEEDUP (MATRIZ_C):     0.235 (23.53 %)
+        SPEEDUP (MATRIZ_BLC):   1.706 (170.65 %)
 
 ```
