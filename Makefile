@@ -26,7 +26,9 @@ help:
 	@echo
 	@echo "####### Exemplo de Execução #######"
 	@echo "./gmat 1000 1000"
-	@echo "mpirun -np 2 main_mpi 1000x1000-mat.map 1000x1000-mat.map"
+	@echo "mpirun -np 4 main_mpi 1000x1000-mat.map 1000x1000-mat.map"
+	@echo "Ou então:"
+	@echo "mpirun -np 8 -hostfile mp main_mpi 1000x1000-mat.map 1000x1000-mat.map"
 
 clean:
 	rm -f *.o *~ $(TARGET) *.map *.result

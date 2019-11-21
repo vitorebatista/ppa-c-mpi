@@ -20,7 +20,16 @@ Deve-se gerar os arquivos com as matrizes para realizar os testes:
 
 Em seguida chamar o programa principal que realizará os devidos testes e apresentará os resultados obtidos. Haverá dois parâmetros, o primeiro e segundo serão do arquivo de matriz.
 
-> ./mpirun -np 2 main_mpi 1000x1000-mat.map 1000x1000-mat.map
+> ./mpirun -np 4 main_mpi 1000x1000-mat.map 1000x1000-mat.map
+
+Para executar em mais de uma máquina, utilizar o arquivo `mp`, conforme exemplo abaixo:
+
+> mpirun -np 8 --hostfile mp main_mpi 1000x1000-mat.map 1000x1000-mat.map 
+
+Em eventuais erros de mpi, utilizar comandos para retirar de tela:
+
+> mpirun -np 8 --hostfile mp -mca btl ^openib  -mca orte_base_help_aggregate 0 ./main_mpi 1000x1000-mat.map 1000x1000-mat.map 
+
 
 Será apresentado no terminal um retorno semelhante a este:
 
